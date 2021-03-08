@@ -1,4 +1,5 @@
-baseUrl: $PRIMARY_SITE_URL
+baseUrl: 'http://localhost:8083/'
+enabled: true
 handle: default
 hasUrls: true
 language: en-US
