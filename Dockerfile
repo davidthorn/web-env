@@ -1,3 +1,5 @@
-FROM php:8.0-fpm
+FROM craftcms/php-fpm:8.0
 
-RUN docker-php-ext-install pdo pdo_mysql mysqli
+COPY --from=composer /usr/bin/composer /usr/bin/composer
+
+WORKDIR /app
