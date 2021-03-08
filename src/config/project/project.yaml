@@ -1,0 +1,17 @@
+dateModified: 1615194688
+email:
+  fromEmail: asd@asdasd.com
+  fromName: 'Craft CMS Initial'
+  transportType: craft\mail\transportadapters\Sendmail
+system:
+  edition: solo
+  live: true
+  name: 'Craft CMS Initial'
+  schemaVersion: 3.6.6
+  timeZone: America/Los_Angeles
+users:
+  allowPublicRegistration: false
+  defaultGroup: null
+  photoSubpath: null
+  photoVolumeUid: null
+  requireEmailVerification: true
