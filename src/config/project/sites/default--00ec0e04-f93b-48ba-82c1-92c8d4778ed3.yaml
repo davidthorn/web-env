@@ -1,0 +1,8 @@
+baseUrl: $PRIMARY_SITE_URL
+handle: default
+hasUrls: true
+language: en-GB
+name: Springlane
+primary: true
+siteGroup: 281a1ba5-e2d3-48a4-b9cb-ccac6a39f8c5 # Springlane
+sortOrder: 1

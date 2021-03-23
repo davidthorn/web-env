@@ -1,0 +1,17 @@
+dateModified: 1616527409
+email:
+  fromEmail: david.thorn@springlane.de
+  fromName: Springlane
+  transportType: craft\mail\transportadapters\Sendmail
+system:
+  edition: solo
+  live: true
+  name: Springlane
+  schemaVersion: 3.6.6
+  timeZone: America/Los_Angeles
+users:
+  allowPublicRegistration: false
+  defaultGroup: null
+  photoSubpath: null
+  photoVolumeUid: null
+  requireEmailVerification: true

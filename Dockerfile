@@ -1,5 +1,13 @@
-FROM php:8.0-fpm
+FROM craftcms/php-fpm:8.0-dev
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+RUN composer --version
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+# switch to the root user to install mysql tools
+USER root
+RUN apk add --no-cache mysql-client
 
-RUN docker-php-ext-install pdo pdo_mysql mysqli
+RUN apk --no-cache add shadow && \
+usermod -u 1000 www-data && \
+groupmod -g 1000 www-data
+USER www-data
+
