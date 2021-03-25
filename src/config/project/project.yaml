@@ -1,8 +1,13 @@
-dateModified: 1616659070
+dateModified: 1616659457
 email:
   fromEmail: david.thorn@springlane.de
   fromName: Springlane
   transportType: craft\mail\transportadapters\Sendmail
+plugins:
+  redactor:
+    edition: standard
+    enabled: true
+    schemaVersion: 2.3.0
 system:
   edition: solo
   live: true
