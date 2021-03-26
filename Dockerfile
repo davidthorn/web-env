@@ -1,5 +1,20 @@
 FROM php:8.0-fpm
+COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
+RUN composer --version
 
-COPY --from=composer /usr/bin/composer /usr/bin/composer
+USER root
 
-RUN docker-php-ext-install pdo pdo_mysql mysqli
+RUN apt-get -y update \
+    && apt-get install -y libicu-dev\
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl
+
+RUN apt-get install -y \
+        libpng-dev \
+        libzip-dev \
+        zip 
+        
+RUN docker-php-ext-install gd pdo pdo_mysql mysqli zip
+
+
+WORKDIR /app

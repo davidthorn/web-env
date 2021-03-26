@@ -1,0 +1,257 @@
+variables:
+    DOCKER_DRIVER: overlay2
+    DOCKER_HOST: "tcp://docker:2375"
+    DOCKER_TLS_CERTDIR: "/certs"
+    MYSQL_ROOT_PASSWORD: app
+    MYSQL_USER: app
+    MYSQL_PASSWORD: app
+    MYSQL_DATABASE: shopware
+    GIT_STRATEGY: clone
+    GIT_DEPTH: 1
+    DB_USER: "app"
+    DB_PASSWORD: "app"
+    DB_HOST: "mysql"
+    DB_PORT: 3306
+    DB_NAME: shopware
+    SW_HOST: "localhost"
+    SW_BASE_PATH: ""
+    ELASTICSEARCH_HOST: elasticsearch
+
+stages:
+    - Static analysis
+    - Unit
+    - E2E
+    - Security
+
+default:
+    image: gitlab.shopware.com:5005/shopware/5/product/image/continuous:7.3
+    before_script:
+        - sed -i -e "s;__ROOT__;$CI_PROJECT_DIR;g" /etc/nginx/sites-enabled/shopware.conf
+        - /usr/bin/supervisord -c /etc/supervisord.conf &>/dev/null &
+        - apk add --no-cache sudo make
+        # https://gitlab.com/gitlab-org/gitlab-foss/-/issues/27921#note_38132416
+        - eval export DB_USER DB_PASSWORD DB_HOST DB_PORT DB_NAME SW_HOST SW_BASE_PATH ELASTICSEARCH_HOST
+
+# Stage: static
+
+PHP analyze:
+    stage: Static analysis
+    script:
+        - sudo -E -u www-data make init
+        - sudo -E -u www-data make check-code
+    services:
+        -   name: mysql:5.7
+            alias: mysql
+    artifacts:
+        expire_in: 1 week
+        reports:
+            junit: php-cs-fixer.xml
+
+Code Coverage:
+    stage: Static analysis
+    script:
+        - make init
+        - php -d pcov.enabled=1 -d pcov.directory=$CI_PROJECT_DIR
+            vendor/bin/phpunit
+            --configuration tests/phpunit.xml.dist
+            --log-junit build/artifacts/phpunit.junit.xml
+            --colors=never
+            --exclude-group=elasticSearch,pcovAdapterBrokenTest
+            --coverage-clover=build/artifacts/phpunit.clover.xml
+            --coverage-cobertura=build/artifacts/phpunit-coverage-cobertura.xml
+    services:
+        -   name: mysql:5.7
+            alias: mysql
+    artifacts:
+        paths:
+            - build/artifacts/*
+        expire_in: 1 week
+        reports:
+            junit: build/artifacts/phpunit.junit.xml
+            cobertura: build/artifacts/phpunit-coverage-cobertura.xml
+
+# stage: Unit
+.phpunit_base:
+    stage: Unit
+    services:
+        -   name: mysql:5.7
+            alias: mysql
+    script:
+        - make test-phpunit
+
+    artifacts:
+        expire_in: 1 week
+        reports:
+            junit: build/artifacts/test-log.xml
+
+.phpunit_es_base:
+    extends: .phpunit_base
+    stage: Elasticsearch
+    script:
+        - make init
+        - make test-phpunit-elasticsearch
+
+    artifacts:
+        expire_in: 1 week
+        reports:
+            junit: build/artifacts/test-log.xml
+
+PHP 7.3:
+    extends: .phpunit_base
+    image: gitlab.shopware.com:5005/shopware/5/product/image/continuous:7.3
+    stage: Unit
+    services:
+        -   name: mysql:5.7
+            alias: mysql
+
+PHP 7.4:
+    extends: .phpunit_base
+    image: gitlab.shopware.com:5005/shopware/5/product/image/continuous:7.4
+    stage: Unit
+    services:
+        -   name: mysql:5.7
+            alias: mysql
+
+PHP 8.0:
+    extends: .phpunit_base
+    image: gitlab.shopware.com:5005/shopware/5/product/image/continuous:8.0
+    stage: Unit
+    services:
+        -   name: mysql:5.7
+            alias: mysql
+
+MySQL 5.7:
+    extends: .phpunit_base
+    stage: Unit
+    services:
+        -   name: mysql:5.7
+            alias: mysql
+
+MySQL 8.0:
+    extends: .phpunit_base
+    stage: Unit
+    services:
+        -   name: mysql:8.0.19
+            alias: mysql
+            command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-authentication-plugin=mysql_native_password", "--sql-require-primary-key=ON"]
+
+MariaDB 10.1:
+    extends: .phpunit_base
+    stage: Unit
+    services:
+        -   name: mariadb:10.1
+            alias: mysql
+
+MariaDB 10.5:
+    extends: .phpunit_base
+    stage: Unit
+    services:
+        -   name: mariadb:10.5
+            alias: mysql
+
+# stage: Elasticsearch
+Elasticsearch 7:
+    extends: .phpunit_es_base
+    image: gitlab.shopware.com:5005/shopware/5/product/image/continuous:7.4
+    stage: Unit
+    services:
+        -   name: mysql:8.0.19
+            alias: mysql
+            command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-authentication-plugin=mysql_native_password"]
+        -   name: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
+            alias: elasticsearch
+            command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
+
+#Elasticsearch 8:
+#    extends: .phpunit_es_base
+#    image: gitlab.shopware.com:5005/shopware/5/product/shopware:7.4
+#    stage: Elasticsearch
+#    allow_failure: true
+#    services:
+#        -   name: mysql:8.0.19
+#            alias: mysql
+#            command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-authentication-plugin=mysql_native_password"]
+#        -   name: docker.elastic.co/elasticsearch/elasticsearch:8.0.0-SNAPSHOT
+#            alias: elasticsearch
+#            command: [ "bin/elasticsearch", "-Expack.security.enabled=false", "-Ediscovery.type=single-node" ]
+
+.mink_base:
+    extends: .phpunit_base
+    image: gitlab.shopware.com:5005/shopware/5/product/image/continuous:7.3
+    stage: E2E
+    artifacts:
+        when: always
+        expire_in: 1 week
+        paths:
+            - build/artifacts/**
+            - build/logs/**
+        reports:
+            junit: build/artifacts/mink/*.xml
+    script:
+        - export SW_HOST=$(hostname -i)
+        - make init
+        - make prepare-mink
+        - chown -R www-data:www-data .
+        - sudo -E -u www-data vendor/bin/behat -vv --config=tests/Mink/behat.yml --format=pretty --out=std --format=junit --out=build/artifacts/mink --tags ${MINK_TAG}
+    services:
+        -   name: selenium/standalone-chrome:84.0
+            alias: selenium
+        -   name: mailhog/mailhog
+            alias: smtp
+        -   name: mysql:8.0.19
+            alias: mysql
+            command: ["mysqld", "--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci", "--default-authentication-plugin=mysql_native_password"]
+
+
+Mink Account:
+    extends: .mink_base
+    variables:
+        MINK_TAG: account
+
+Mink Checkout:
+    extends: .mink_base
+    variables:
+        MINK_TAG: checkout1
+
+Mink Checkout 2:
+    extends: .mink_base
+    variables:
+        MINK_TAG: checkout2
+
+Mink Detail:
+    extends: .mink_base
+    variables:
+        MINK_TAG: detail
+
+Mink Listing:
+    extends: .mink_base
+    variables:
+        MINK_TAG: listing
+
+Mink Note:
+    extends: .mink_base
+    variables:
+        MINK_TAG: note
+
+Mink Sitemap:
+    extends: .mink_base
+    variables:
+        MINK_TAG: sitemap
+
+Mink Misc:
+    extends: .mink_base
+    variables:
+        MINK_TAG: misc
+
+RIPS security:
+    stage: Security
+    image: php:7.3-alpine
+    before_script: []
+    only:
+        variables:
+            - $RIPS_SCAN == "1"
+    script:
+        - apk add --no-cache libzip-dev && docker-php-ext-configure zip --with-libzip=/usr/include && docker-php-ext-install zip
+        - wget https://github.com/rips/rips-cli/releases/download/3.2.0/rips-cli.phar -O /usr/bin/rips-cli
+        - chmod 755 /usr/bin/rips-cli
+        - rips-cli rips:scan:start -p . -C 20  -a ${RIPS_APP_ID} -T ${CI_COMMIT_REF_NAME} --progress

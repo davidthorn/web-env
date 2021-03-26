@@ -6,7 +6,7 @@ networks:
 services:
 
   php:
-    container_name: webphp
+    container_name: sw_webphp
     build: 
       context: .
       dockerfile: Dockerfile
@@ -19,12 +19,12 @@ services:
   
   nginx:
       image: nginx:latest
-      container_name: webserver
+      container_name: sw_webserver
       volumes:
         - ./src:/app
         - ./nginx.conf:/etc/nginx/conf.d/default.conf
       ports:
-        - 8081:80
+        - 8087:80
       networks:
         - web
       depends_on: 
@@ -32,11 +32,11 @@ services:
 
   mysql:
       image: mysql:latest
-      container_name: mysql
+      container_name: sw_mysql
       volumes:
         - ./mysql:/var/lib/mysql
       ports:
-        - 33601:3306
+        - 33607:3306
       networks:
         - web
       environment: 
@@ -48,8 +48,8 @@ services:
   admin:
     image: phpmyadmin:latest
     ports:
-      - 9001:80
-    container_name: webadmin
+      - 9007:80
+    container_name: sw_webadmin
     environment: 
       PMA_HOST: mysql
       PMA_USER: david

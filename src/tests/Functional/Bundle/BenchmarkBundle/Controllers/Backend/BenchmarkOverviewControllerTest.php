@@ -1,0 +1,183 @@
+<?php
+/**
+ * Shopware 5
+ * Copyright (c) shopware AG
+ *
+ * According to our dual licensing model, this program can be used either
+ * under the terms of the GNU Affero General Public License, version 3,
+ * or under a proprietary license.
+ *
+ * The texts of the GNU Affero General Public License with an additional
+ * permission and of our proprietary license can be found at and
+ * in the LICENSE file you have received along with this program.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * "Shopware" is a registered trademark of shopware AG.
+ * The licensing of the program under the AGPLv3 does not imply a
+ * trademark license. Therefore any rights, title and interest in
+ * our trademarks remain entirely with us.
+ */
+
+namespace Shopware\Tests\Functional\Bundle\BenchmarkBundle\Controllers\Backend;
+
+use Shopware\Tests\Functional\Bundle\BenchmarkBundle\Controllers\Backend\Mocks\AuthMock;
+
+class BenchmarkOverviewControllerTest extends BenchmarkControllerTestCase
+{
+    const CONTROLLER_NAME = \Shopware_Controllers_Backend_BenchmarkOverview::class;
+
+    /**
+     * @group BenchmarkBundle
+     */
+    public function testIndexActionShouldRedirectLocalStart()
+    {
+        /** @var \Shopware_Controllers_Backend_BenchmarkOverview $controller */
+        $controller = $this->getController();
+
+        Shopware()->Db()->exec('DELETE FROM s_benchmark_config;');
+        $controller->indexAction();
+
+        $redirect = $this->getRedirect($controller->Response());
+
+        static::assertStringContainsString('BenchmarkLocalOverview/render/template/start', $redirect);
+    }
+
+    /**
+     * @group BenchmarkBundle
+     */
+    public function testIndexActionShouldRedirectCachedFreshStatistics()
+    {
+        /** @var \Shopware_Controllers_Backend_BenchmarkOverview $controller */
+        $controller = $this->getController();
+
+        $this->installDemoData('benchmark_config');
+        $this->setSetting('industry', 1);
+        $this->setSetting('last_received', date('Y-m-d H:i:s'));
+        $this->setSetting('cached_template', '<h2>Placeholder</h2>');
+
+        $controller->indexAction();
+
+        $redirect = $this->getRedirect($controller->Response());
+
+        static::assertStringContainsString('BenchmarkOverview/render', $redirect);
+    }
+
+    /**
+     * @group BenchmarkBundle
+     */
+    public function testIndexActionShouldRedirectWaitingFreshStatisticsNoCachedTemplate()
+    {
+        /** @var \Shopware_Controllers_Backend_BenchmarkOverview $controller */
+        $controller = $this->getController();
+
+        $this->installDemoData('benchmark_config');
+        $this->setSetting('industry', 1);
+        $this->setSetting('last_received', date('Y-m-d H:i:s'));
+
+        $controller->indexAction();
+
+        $redirect = $this->getRedirect($controller->Response());
+
+        static::assertStringContainsString('BenchmarkLocalOverview/render/template/waiting', $redirect);
+    }
+
+    /**
+     * @group BenchmarkBundle
+     */
+    public function testIndexActionShouldRedirectWaitingInactive()
+    {
+        /** @var \Shopware_Controllers_Backend_BenchmarkOverview $controller */
+        $controller = $this->getController();
+
+        $this->installDemoData('benchmark_config');
+        $this->setSetting('industry', 1);
+        $this->setSetting('active', 0);
+
+        $controller->indexAction();
+
+        $redirect = $this->getRedirect($controller->Response());
+
+        static::assertStringContainsString('BenchmarkLocalOverview/render/template/waiting', $redirect);
+    }
+
+    /**
+     * @group BenchmarkBundle
+     */
+    public function testIndexActionShouldRedirectWaitingActiveOutdated()
+    {
+        /** @var \Shopware_Controllers_Backend_BenchmarkOverview $controller */
+        $controller = $this->getController();
+
+        $this->installDemoData('benchmark_config');
+        $this->setSetting('industry', 1);
+        $this->setSetting('last_received', date('Y-m-d H:i:s', strtotime('-31 days')));
+        $this->setSetting('active', 1);
+
+        $controller->indexAction();
+
+        $redirect = $this->getRedirect($controller->Response());
+
+        static::assertStringContainsString('BenchmarkLocalOverview/render/template/waiting', $redirect);
+    }
+
+    /**
+     * @group BenchmarkBundle
+     */
+    public function testIndexActionShouldRedirectCachedActive()
+    {
+        /** @var \Shopware_Controllers_Backend_BenchmarkOverview $controller */
+        $controller = $this->getController();
+
+        $this->installDemoData('benchmark_config');
+        $this->setSetting('industry', 1);
+        $this->setSetting('last_received', date('Y-m-d H:i:s', strtotime('-3 days')));
+        $this->setSetting('active', 1);
+        $this->setSetting('cached_template', '<h2>Placeholder</h2>');
+
+        $controller->indexAction();
+
+        $redirect = $this->getRedirect($controller->Response());
+
+        static::assertStringContainsString('BenchmarkOverview/render', $redirect);
+    }
+
+    public function testRenderActionShouldRenderCachedTemplate()
+    {
+        /** @var \Shopware_Controllers_Backend_BenchmarkOverview $controller */
+        $controller = $this->getController();
+
+        $now = new \DateTime('now');
+
+        $this->installDemoData('benchmark_config');
+        $this->setSetting('cached_template', '<h2>Placeholder</h2>');
+        $this->setSetting('last_received', $now->format('Y-m-d H:i:s'));
+
+        $this->expectOutputString('<h2>Placeholder</h2>');
+        $controller->renderAction();
+    }
+
+    /**
+     * @return \Shopware_Controllers_Backend_BenchmarkOverview
+     */
+    protected function getController()
+    {
+        $controller = parent::getController();
+
+        Shopware()->Container()->set('auth', new AuthMock());
+        Shopware()->Plugins()->Backend()->Auth()->onInitResourceAuth(new \Enlight_Event_EventArgs());
+
+        return $controller;
+    }
+
+    /**
+     * @return string
+     */
+    private function getRedirect(\Enlight_Controller_Response_ResponseHttp $response)
+    {
+        return $response->getHeader('Location');
+    }
+}
