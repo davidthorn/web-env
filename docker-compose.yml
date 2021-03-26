@@ -7,6 +7,15 @@ services:
 
   php:
     container_name: sw_webphp
+    environment:
+      DB_USER: david
+      DB_PORT: 3006
+      DB_NAME: david
+      DB_HOST: mysql
+      DB_PASSWORD: 123456
+      SW_HOST: localhost
+      SW_BASE_PATH: ""
+      ELASTICSEARCH_HOST: localhost
     build: 
       context: .
       dockerfile: Dockerfile
@@ -24,7 +33,7 @@ services:
         - ./src:/app
         - ./nginx.conf:/etc/nginx/conf.d/default.conf
       ports:
-        - 8087:80
+        - 80:80
       networks:
         - web
       depends_on: 
