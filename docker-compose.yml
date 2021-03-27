@@ -16,6 +16,7 @@ services:
       SW_HOST: localhost
       SW_BASE_PATH: ""
       ELASTICSEARCH_HOST: localhost
+      SHOPWARE_ENV: dev
     build: 
       context: .
       dockerfile: Dockerfile
