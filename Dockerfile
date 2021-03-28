@@ -12,9 +12,11 @@ RUN apt-get -y update \
 RUN apt-get install -y \
         libpng-dev \
         libzip-dev \
+        libjpeg-dev \
         zip 
         
 RUN docker-php-ext-configure gd \
+    --with-jpeg \
     --with-freetype
 
 RUN docker-php-ext-install gd pdo pdo_mysql mysqli zip
