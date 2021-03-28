@@ -5,7 +5,7 @@ RUN composer --version
 USER root
 
 RUN apt-get -y update \
-    && apt-get install -y libicu-dev\
+    && apt-get install -y libicu-dev libfreetype6-dev\
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl
 
@@ -14,6 +14,9 @@ RUN apt-get install -y \
         libzip-dev \
         zip 
         
+RUN docker-php-ext-configure gd \
+    --with-freetype
+
 RUN docker-php-ext-install gd pdo pdo_mysql mysqli zip
 
 
