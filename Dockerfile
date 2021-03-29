@@ -14,7 +14,13 @@ RUN apt-get install -y \
         libzip-dev \
         libjpeg-dev \
         zip 
-        
+
+RUN apt-get install -y advancecomp \
+    gifsicle jhead jpegoptim \
+    libjpeg-progs optipng \
+    pngcrush pngquant guetzli
+
+
 RUN docker-php-ext-configure gd \
     --with-jpeg \
     --with-freetype
