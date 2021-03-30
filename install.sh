@@ -2,7 +2,7 @@
 
 docker-compose down \
                 --remove-orphans \
-                # --rmi=all # uncomment if you want a super-clean-install by removing all images.
+                #--rmi=all # DO NOT UNCOMMENT - uncomment if you want a super-clean-install by removing all images.
 
 rm -rf src/vendor
 rm -rf src/.env
@@ -39,4 +39,4 @@ docker exec -it craftcms_webphp php ./craft install/craft \
                                             --language=en \
                                             --email=backend@springlane.de
 
-
+docker exec -it craftcms_webphp php craft plugin/install spl-custom-plugin-handle
