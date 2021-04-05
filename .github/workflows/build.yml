@@ -36,7 +36,7 @@ jobs:
         run: docker exec -t -u root webphp php bin/console make:command david:command -n
         
       - name: Check Command File exists
-        run: docker exec -t webphp test -f /app/src/Command/DavidCommandCommand.php && echo "$FILE exists."
+        run: docker exec -t webphp test -f /app/src/Command/DavidCommand.php && echo "$FILE exists."
         
         
         
