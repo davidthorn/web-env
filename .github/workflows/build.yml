@@ -24,6 +24,9 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
+      - name: Check API Token
+        run: echo ${{ secrets.API_TOKEN_GITHUB }}
+
       # Runs a single command using the runners shell
       - name: Run Docker up
         run: docker-compose up -d
