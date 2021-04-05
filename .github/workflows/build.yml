@@ -29,7 +29,8 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run composer install
-        run: docker exec -t webphp composer install
+        run: docker exec -t -u root webphp composer install
 
       - name: Run make:command
         run: docker exec -t webphp php bin/console make:command david:command -n
+        
