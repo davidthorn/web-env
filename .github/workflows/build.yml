@@ -14,14 +14,6 @@ on:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   
-  info:
-    
-    runs-on: ubuntu-latest
-  
-    steps:
-      - name: Test User Id
-        run: id -u
-
   # This workflow contains a single job called "build"
   build:
     # The type of runner that the job will run on
@@ -42,5 +34,9 @@ jobs:
 
       - name: Run make:command
         run: docker exec -t -u root webphp php bin/console make:command david:command -n
+        
+      - name: Check Command File exists
+        run: docker exec -t webphp ls -l /app/src/Commands
+        
         
         
