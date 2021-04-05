@@ -29,4 +29,4 @@ jobs:
 
       # Runs a set of commands using the runners shell
       - name: Run composer install
-        run: docker exec -t webphp composer install
+        run: docker exec -t -u root webphp composer install
