@@ -1,7 +1,7 @@
-dateModified: 1617721498
+dateModified: 1617721795
 email:
-  fromEmail: asd@asdasd.com
-  fromName: 'Craft CMS Initial'
+  fromEmail: david.thorn221278@googlemail.com
+  fromName: 'Craft CMS Redactor'
   transportType: craft\mail\transportadapters\Sendmail
 plugins:
   redactor:
@@ -11,7 +11,7 @@ plugins:
 system:
   edition: solo
   live: true
-  name: 'Craft CMS Initial'
+  name: 'Craft CMS Redactor'
   schemaVersion: 3.6.7
   timeZone: America/Los_Angeles
 users:

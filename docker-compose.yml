@@ -1,42 +1,42 @@
 version: '3.8'
 
 networks:
-  craft_cms_web:
+  craft_cms_web_1:
 
 services:
 
   php:
-    container_name: craft_cms_webphp
+    container_name: craft_cms_webphp_1
     build: 
       context: .
       dockerfile: Dockerfile
     volumes:
       - ./src:/app
     networks:
-        - craft_cms_web
+        - craft_cms_web_1
     depends_on: 
       - mysql
   
   nginx:
       image: nginx:latest
-      container_name: craft_cms_webserver
+      container_name: craft_cms_webserver_1
       volumes:
         - ./src:/app
         - ./nginx.conf:/etc/nginx/conf.d/default.conf
       ports:
-        - 8083:80
+        - 8084:80
       networks:
-        - craft_cms_web
+        - craft_cms_web_1
       depends_on: 
         - php
 
   mysql:
       image: mysql:latest
-      container_name: craft_cms_mysql
+      container_name: craft_cms_mysql_1
       ports:
-        - 33603:3306
+        - 33604:3306
       networks:
-        - craft_cms_web
+        - craft_cms_web_1
       environment: 
         MYSQL_USER: craftcms
         MYSQL_PASSWORD: 123456
@@ -46,13 +46,13 @@ services:
   admin:
     image: phpmyadmin:latest
     ports:
-      - 9003:80
-    container_name: craft_cms_webadmin
+      - 9004:80
+    container_name: craft_cms_webadmin_1
     environment: 
       PMA_HOST: mysql
       PMA_USER: craftcms
       PMA_PASSWORD: 123456
     networks:
-      - craft_cms_web
+      - craft_cms_web_1
     
     
