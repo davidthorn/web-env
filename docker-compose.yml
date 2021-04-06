@@ -1,7 +1,7 @@
 version: '3.8'
 
 networks:
-  web:
+  craft_cms_web:
 
 services:
 
@@ -13,7 +13,7 @@ services:
     volumes:
       - ./src:/app
     networks:
-        - web
+        - craft_cms_web
     depends_on: 
       - mysql
   
@@ -26,7 +26,7 @@ services:
       ports:
         - 8083:80
       networks:
-        - web
+        - craft_cms_web
       depends_on: 
         - php
 
@@ -36,7 +36,7 @@ services:
       ports:
         - 33603:3306
       networks:
-        - web
+        - craft_cms_web
       environment: 
         MYSQL_USER: craftcms
         MYSQL_PASSWORD: 123456
@@ -53,6 +53,6 @@ services:
       PMA_USER: craftcms
       PMA_PASSWORD: 123456
     networks:
-      - web
+      - craft_cms_web
     
     
