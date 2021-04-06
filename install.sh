@@ -13,15 +13,15 @@ docker-compose build --no-cache
 
 docker-compose up -d
 
-docker exec -it craftcms_webphp composer install
+docker exec -it craft_cms_webphp composer install
 
-docker exec -it craftcms_webphp php craft setup/security-key
-docker exec -it craftcms_webphp php craft setup/app-id
+docker exec -it craft_cms_webphp php craft setup/security-key
+docker exec -it craft_cms_webphp php craft setup/app-id
 
-docker exec -it craftcms_webphp php ./craft install/craft \
+docker exec -it craft_cms_webphp php ./craft install/craft \
                                             --interactive=0 \
                                             --username=admin \
-                                            --site-url=http://localhost:8082 \
+                                            --site-url=http://localhost:8083 \
                                             --site-name="Craft CMS - Initial" \
                                             --password=password \
                                             --language=en \
