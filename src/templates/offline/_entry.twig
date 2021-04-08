@@ -1,0 +1,34 @@
+{% extends "index" %}
+
+{% block content %}
+
+{% set matrixBlocks = entry.homeMatrix.all() %}
+
+<div class="container">
+    {% for matrixBlock in matrixBlocks %}
+        {% if matrixBlock.type == 'mainTitleBlock'%}
+            <h1>{{ matrixBlock.textField }}</h1>
+        {% endif %}
+        
+        {% if matrixBlock.type == 'mainImageAssetBlock'%}
+             <div class="profile-image-wrapper">
+                <img width="200" height="auto" src={{ matrixBlock.image.one().url }} class="profile-image"/>
+            </div>
+        {% endif %}
+        
+        {% if matrixBlock.type == 'subTextBlock'%}
+            <div class="profile-subtext-container"/>
+                <div class="rich-text-field-wrapper">{{ matrixBlock.textField }}</div>
+            </div>
+        {% endif %}
+
+        {% if matrixBlock.type == 'youtubeButtonBlock'%}
+            <div class="channel-button-container"/>
+                <a target="_blank" href={{ matrixBlock.youtubeLink }}>{{ matrixBlock.buttonText }}</a>
+            </div>
+        {% endif %}
+        
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -1,0 +1,64 @@
+field: 29f8d41a-67c5-4c73-9ecd-b8ce7cd44811 # Home Matrix
+fieldLayouts:
+  c542167f-eb3c-402d-91ba-cdf87704fe69:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: 3aa160a8-bcf8-43b6-b9d1-9312e06f459e # Button Text
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+          -
+            fieldUid: 058de631-ee8d-49eb-9947-c7d4e185cae6 # Link
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Content
+        sortOrder: 1
+fields:
+  058de631-ee8d-49eb-9947-c7d4e185cae6: # Link
+    contentColumnType: string(1000)
+    fieldGroup: null
+    handle: youtubeLink
+    instructions: ''
+    name: Link
+    searchable: false
+    settings:
+      maxLength: '1000'
+      placeholder: null
+      types:
+        - url
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\Url
+  3aa160a8-bcf8-43b6-b9d1-9312e06f459e: # Button Text
+    contentColumnType: text
+    fieldGroup: null
+    handle: buttonText
+    instructions: ''
+    name: 'Button Text'
+    searchable: false
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: 'Enter the text for the button'
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+handle: youtubeButtonBlock
+name: 'Youtube Button Block'
+sortOrder: 4

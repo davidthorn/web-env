@@ -1,0 +1,40 @@
+field: 29f8d41a-67c5-4c73-9ecd-b8ce7cd44811 # Home Matrix
+fieldLayouts:
+  ae2b8726-7586-4c30-a78e-34f990967da0:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: 350be7bb-1ffc-4699-8bbc-dda54fae6f55 # Text Field
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Content
+        sortOrder: 1
+fields:
+  350be7bb-1ffc-4699-8bbc-dda54fae6f55: # Text Field
+    contentColumnType: text
+    fieldGroup: null
+    handle: textField
+    instructions: ''
+    name: 'Text Field'
+    searchable: true
+    settings:
+      byteLimit: null
+      charLimit: null
+      code: ''
+      columnType: null
+      initialRows: '4'
+      multiline: ''
+      placeholder: 'Enter the title of the page here'
+      uiMode: normal
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\fields\PlainText
+handle: mainTitleBlock
+name: 'Main Title Block'
+sortOrder: 1

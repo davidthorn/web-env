@@ -1,0 +1,49 @@
+field: 29f8d41a-67c5-4c73-9ecd-b8ce7cd44811 # Home Matrix
+fieldLayouts:
+  755f412a-95b6-4229-8c9f-a046dd0e0ba2:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: 93832352-c3be-498e-9862-adcb9ce85913 # Text Field
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Content
+        sortOrder: 1
+fields:
+  93832352-c3be-498e-9862-adcb9ce85913: # Text Field
+    contentColumnType: text
+    fieldGroup: null
+    handle: textField
+    instructions: ''
+    name: 'Text Field'
+    searchable: false
+    settings:
+      availableTransforms: '*'
+      availableVolumes: ''
+      cleanupHtml: true
+      columnType: text
+      configSelectionMode: choose
+      defaultTransform: ''
+      manualConfig: ''
+      purifierConfig: ''
+      purifyHtml: '1'
+      redactorConfig: ''
+      removeEmptyTags: '1'
+      removeInlineStyles: '1'
+      removeNbsp: '1'
+      showHtmlButtonForNonAdmins: ''
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+      uiMode: enlarged
+    translationKeyFormat: null
+    translationMethod: none
+    type: craft\redactor\Field
+handle: subTextBlock
+name: 'Sub Text Block'
+sortOrder: 3
