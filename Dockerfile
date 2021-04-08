@@ -33,7 +33,7 @@ groupmod -g 1000 www-data
 # Copy project fles and env file
 ADD --chown=www-data:www-data ./src /app
 VOLUME [ "/app" ]
-COPY --chown=www-data:www-data ./conf/.env /app/.env
+ADD --chown=www-data:www-data ./conf/.env /app/.env
 RUN chown -R www-data:www-data /app
 
 USER www-data

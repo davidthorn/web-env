@@ -1,4 +1,4 @@
-dateModified: 1617880890
+dateModified: 1617891189
 email:
   fromEmail: asd@asdasd.com
   fromName: 'Craft CMS Initial'
@@ -14,10 +14,11 @@ plugins:
     schemaVersion: 2.2.1
 system:
   edition: solo
-  live: true
-  name: 'Craft CMS Initial'
+  live: false
+  name: 'Davids Site'
+  retryDuration: null
   schemaVersion: 3.6.6
-  timeZone: America/Los_Angeles
+  timeZone: Europe/Berlin
 users:
   allowPublicRegistration: false
   defaultGroup: null

@@ -7,20 +7,6 @@ PASSWORD=SecretPassword
 EMAIL="david.thorn221278@googlemail.com"
 HOST="http://localhost:8020"
 
-docker-compose down \
-                --remove-orphans \
-                #--rmi=all # DO NOT UNCOMMENT - uncomment if you want a super-clean-install by removing all images.
-
-rm -rf src/.env
-
-cp conf/.env src/.env
-
-docker-compose build --no-cache
-
-docker-compose up -d
-
-docker exec -it $CONTAINER composer install
-
 docker exec -it $CONTAINER php craft setup/security-key
 docker exec -it $CONTAINER php craft setup/app-id
 

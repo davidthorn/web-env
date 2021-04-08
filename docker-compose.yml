@@ -43,20 +43,7 @@ services:
         MYSQL_ROOT_PASSWORD: SecretPassword
         MYSQL_DATABASE: kitchenstories
       volumes:
-        - mysql_db-dev
+        - mysql_db-dev:/var/lib/mysql
       
-  admin-dev:
-    image: phpmyadmin:latest
-    ports:
-      - 9020:80
-    container_name: ks_admin-dev
-    environment: 
-      PMA_HOST: mysql-dev
-    networks:
-      - ks_web
-    depends_on:
-      - php-dev
-    
-    
 volumes:
   mysql_db-dev:
