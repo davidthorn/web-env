@@ -42,6 +42,8 @@ services:
         MYSQL_PASSWORD: SecretPassword
         MYSQL_ROOT_PASSWORD: SecretPassword
         MYSQL_DATABASE: kitchenstories
+      volumes:
+        - mysql_db-dev
       
   admin-dev:
     image: phpmyadmin:latest
@@ -50,11 +52,11 @@ services:
     container_name: ks_admin-dev
     environment: 
       PMA_HOST: mysql-dev
-      PMA_USER: kitchenstories
-      PMA_PASSWORD: SecretPassword
     networks:
       - ks_web
     depends_on:
       - php-dev
     
     
+volumes:
+  mysql_db-dev:
