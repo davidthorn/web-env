@@ -1,8 +1,17 @@
-dateModified: 1615195198
+dateModified: 1617880890
 email:
   fromEmail: asd@asdasd.com
   fromName: 'Craft CMS Initial'
   transportType: craft\mail\transportadapters\Sendmail
+plugins:
+  redactor:
+    edition: standard
+    enabled: true
+    schemaVersion: 2.3.0
+  super-table:
+    edition: standard
+    enabled: true
+    schemaVersion: 2.2.1
 system:
   edition: solo
   live: true
