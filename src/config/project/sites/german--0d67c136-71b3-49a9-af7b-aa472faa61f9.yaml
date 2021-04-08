@@ -1,0 +1,9 @@
+baseUrl: '@web/de'
+enabled: true
+handle: german
+hasUrls: true
+language: de
+name: German
+primary: false
+siteGroup: 0016e05e-2f77-4dcb-ae4d-e0fcfd73cf07 # Home
+sortOrder: 2

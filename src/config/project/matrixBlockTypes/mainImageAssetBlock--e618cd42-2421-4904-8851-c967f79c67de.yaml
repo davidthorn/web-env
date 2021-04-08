@@ -1,0 +1,53 @@
+field: 29f8d41a-67c5-4c73-9ecd-b8ce7cd44811 # Home Matrix
+fieldLayouts:
+  6fe0b3f7-b283-4c53-b76a-cc08323589a5:
+    tabs:
+      -
+        elements:
+          -
+            fieldUid: a700b16e-1cdc-46bc-b911-081642017ffc # Image
+            instructions: null
+            label: null
+            required: true
+            tip: null
+            type: craft\fieldlayoutelements\CustomField
+            warning: null
+            width: 100
+        name: Content
+        sortOrder: 1
+fields:
+  a700b16e-1cdc-46bc-b911-081642017ffc: # Image
+    contentColumnType: string
+    fieldGroup: null
+    handle: image
+    instructions: ''
+    name: Image
+    searchable: false
+    settings:
+      allowSelfRelations: false
+      allowUploads: true
+      allowedKinds: null
+      defaultUploadLocationSource: 'volume:37fd4356-f850-442c-800e-92775fc08475' # Recipes
+      defaultUploadLocationSubpath: ''
+      limit: ''
+      localizeRelations: false
+      previewMode: full
+      restrictFiles: ''
+      selectionLabel: ''
+      showSiteMenu: true
+      showUnpermittedFiles: false
+      showUnpermittedVolumes: false
+      singleUploadLocationSource: 'volume:3050cec8-7e12-416c-9290-76b17a1f105b' # Images
+      singleUploadLocationSubpath: ''
+      source: null
+      sources: '*'
+      targetSiteId: null
+      useSingleFolder: true
+      validateRelatedElements: false
+      viewMode: list
+    translationKeyFormat: null
+    translationMethod: site
+    type: craft\fields\Assets
+handle: mainImageAssetBlock
+name: 'Main Image Asset'
+sortOrder: 2

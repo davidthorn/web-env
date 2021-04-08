@@ -1,0 +1,16 @@
+enableVersioning: true
+handle: offline
+name: 'OffLine Page'
+propagationMethod: all
+siteSettings:
+  0d67c136-71b3-49a9-af7b-aa472faa61f9: # German
+    enabledByDefault: true
+    hasUrls: true
+    template: offline/_entry
+    uriFormat: __home__
+  c848a620-72d5-4ba8-b856-75cbb4f6fae5: # Davids Videos
+    enabledByDefault: true
+    hasUrls: true
+    template: offline/_entry
+    uriFormat: __home__
+type: single

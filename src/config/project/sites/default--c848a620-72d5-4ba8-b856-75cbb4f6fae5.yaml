@@ -3,7 +3,7 @@ enabled: true
 handle: default
 hasUrls: true
 language: en
-name: 'Davids Site'
+name: 'Davids Videos'
 primary: true
 siteGroup: 0016e05e-2f77-4dcb-ae4d-e0fcfd73cf07 # Home
 sortOrder: 1
