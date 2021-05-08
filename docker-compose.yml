@@ -1,71 +1,63 @@
-version: '3.8'
+version: '3.2'
 
 networks:
-  web:
+  sw_network:
 
 services:
 
   php:
-    container_name: sw_webphp
+    container_name: sw_php
     environment:
       DB_USER: david
-      DB_PORT: 3006
+      DB_PORT: 3306
       DB_NAME: david
       DB_HOST: mysql
       DB_PASSWORD: 123456
-      SW_HOST: localhost
+      SW_HOST: shop.thorn.solutions
       SW_BASE_PATH: ""
-      ELASTICSEARCH_HOST: localhost
+      ELASTICSEARCH_HOST: shop.thorn.solutions
       SHOPWARE_ENV: dev
     build: 
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./conf/memory_limit.ini:/usr/local/etc/php/conf.d/memory_limit.ini
-      - ./src:/app
+      - ./conf/sw_php.ini:/usr/local/etc/php/conf.d/sw_php.ini
+      - ./shopware:/app
     networks:
-        - web
+        - sw_network
+    restart: always
     depends_on: 
       - mysql
   
   nginx:
       image: nginx:latest
-      container_name: sw_webserver
+      container_name: sw_web
       volumes:
-        - ./src:/app
+        - ./shopware:/app
         - ./conf/nginx.conf:/etc/nginx/conf.d/default.conf
       ports:
-        - 80:80
+        - 48080:80
       networks:
-        - web
+        - sw_network
+      restart: always
       depends_on: 
         - php
 
   mysql:
-      image: mysql:latest
+      image: mysql:5.7
+      restart: always
       container_name: sw_mysql
       volumes:
-        - ./mysql:/var/lib/mysql
+        - sw_data_db:/var/lib/mysql
       ports:
-        - 33607:3306
+        - 43306:3306
       networks:
-        - web
+        - sw_network
       environment: 
         MYSQL_USER: david
         MYSQL_PASSWORD: 123456
         MYSQL_ROOT_PASSWORD: 123456
         MYSQL_DATABASE: david
-      
-  admin:
-    image: phpmyadmin:latest
-    ports:
-      - 9007:80
-    container_name: sw_webadmin
-    environment: 
-      PMA_HOST: mysql
-      PMA_USER: david
-      PMA_PASSWORD: 123456
-    networks:
-      - web
-    
-    
+
+volumes:
+  sw_data_db:
