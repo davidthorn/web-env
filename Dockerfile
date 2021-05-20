@@ -26,6 +26,6 @@ USER root
 RUN apk add --no-cache mysql-client
 
 RUN apk --no-cache add shadow && \
-usermod -u 1000 www-data && \
-groupmod -g 1000 www-data
+usermod -u $USER www-data && \
+groupmod -g $USER www-data
 USER www-data
