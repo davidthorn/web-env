@@ -1,4 +1,7 @@
 FROM craftcms/php-fpm:8.0-dev
+
+ARG CMS_USER_ID
+
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
 RUN composer --version
 
@@ -26,6 +29,6 @@ USER root
 RUN apk add --no-cache mysql-client
 
 RUN apk --no-cache add shadow && \
-usermod -u $USER www-data && \
-groupmod -g $USER www-data
+usermod -u $CMS_USER_ID www-data && \
+groupmod -g $CMS_USER_ID www-data
 USER www-data
