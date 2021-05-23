@@ -1,62 +1,61 @@
 version: '3.8'
 
 networks:
-  web:
+  shopping_network:
+    name: ${PREFIX}network
 
 services:
 
   php:
-    container_name: webphp
-    build: 
-      context: .
+    container_name: ${PREFIX}php
+    build:
+      args:
+        - USER_ID
+      context: ./build
       dockerfile: Dockerfile
     volumes:
-      - ./src:/app
+      - ${APP_SOURCE}:${APP_WORKING_DIR}
     networks:
-        - web
+        - shopping_network
     depends_on: 
       - mysql
   
   nginx:
       image: nginx:latest
-      container_name: webserver
+      container_name: ${PREFIX}nginx
       volumes:
-        - ./src:/app
-        - ./nginx.conf:/etc/nginx/conf.d/default.conf
+        - ${APP_SOURCE}:${APP_WORKING_DIR}
+        - ./build/conf/nginx.conf:/etc/nginx/conf.d/default.conf
       ports:
-        - 8081:80
+        - ${NGINX_PORT}:80
       networks:
-        - web
+        - shopping_network
       depends_on: 
         - php
 
   mysql:
-      image: mysql:latest
-      container_name: mysql
+      image: mysql:${MYSQL_VERSION}
+      container_name: ${PREFIX}mysql
+      env_file:
+        - ./build/conf/mysql.env
       volumes:
-        - mysql_data:/var/lib/mysql
+        - db_data:/var/lib/mysql
       ports:
-        - 33601:3306
+        - ${MYSQL_SERVICE_PORT}:3306
       networks:
-        - web
-      environment: 
-        MYSQL_USER: david
-        MYSQL_PASSWORD: 123456
-        MYSQL_ROOT_PASSWORD: 123456
-        MYSQL_DATABASE: david
-      
+        - shopping_network
+
   admin:
     image: phpmyadmin:latest
     ports:
-      - 9001:80
-    container_name: webadmin
-    environment: 
-      PMA_HOST: mysql
-      PMA_USER: david
-      PMA_PASSWORD: 123456
+      - ${PHPADMIN_SERVICE_PORT}:80
+    container_name: ${PREFIX}admin
+    env_file:
+      - ./build/conf/admin.env
     networks:
-      - web
+      - shopping_network
     
 volumes:
-  mysql_data:
+  db_data:
+    name: "${PREFIX}mysql_data"
     
