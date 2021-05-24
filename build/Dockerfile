@@ -2,6 +2,8 @@ FROM php:8.0-fpm
 
 ARG USER_ID
 
+USER root
+
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 RUN apt-get update -y && apt-get install -y git libzip-dev zip libicu-dev && \
