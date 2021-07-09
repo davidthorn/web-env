@@ -1,7 +1,7 @@
-version: '3.8'
+version: '3.6'
 
 networks:
-  shopping_network:
+  application_network:
     name: ${PREFIX}network
 
 services:
@@ -16,7 +16,7 @@ services:
     volumes:
       - ${APP_SOURCE}:${APP_WORKING_DIR}
     networks:
-        - shopping_network
+        - application_network
     depends_on: 
       - mysql
   
@@ -29,7 +29,7 @@ services:
       ports:
         - ${NGINX_PORT}:80
       networks:
-        - shopping_network
+        - application_network
       depends_on: 
         - php
 
@@ -43,7 +43,7 @@ services:
       ports:
         - ${MYSQL_SERVICE_PORT}:3306
       networks:
-        - shopping_network
+        - application_network
 
   admin:
     image: phpmyadmin:latest
@@ -53,7 +53,7 @@ services:
     env_file:
       - ./build/conf/admin.env
     networks:
-      - shopping_network
+      - application_network
     
 volumes:
   db_data:
